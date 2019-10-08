@@ -1,0 +1,53 @@
+---
+title: "Airbnb Case"
+author: "Alice Tivarovsky"
+date: "10/8/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library (tidyverse)
+```
+
+
+```{r}
+library(p8105.datasets)
+data(nyc_airbnb)
+
+nyc_airbnb
+
+```
+
+```{r}
+str(nyc_airbnb)
+
+nyc_airbnb %>%
+  count(room_type)
+
+nyc_airbnb %>%
+  count(neighbourhood_group)
+```
+
+Does rating vary by neighborhood? 
+
+```{r}
+nyc_airbnb %>% 
+  drop_na() %>% 
+  group_by(neighbourhood_group, review_scores_location) %>% 
+  ggplot(aes(x = neighbourhood_group, y = review_scores_location, color = neighbourhood_group)) + geom_boxplot()
+```
+Median price 
+
+
+```{r}
+nyc_airbnb %>% 
+  group_by(neighbourhood_group, room_type) %>% 
+  summarize(med_price = median(price, na_rm = TRUE)) %>% 
+  pivot_wider(
+    names_from = room_type,
+    values_from = med_price
+  )
+
+```
+
